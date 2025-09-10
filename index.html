@@ -30,8 +30,10 @@
                         'brand-secondary': '#a1a1aa',
                     },
                     animation: {
-                        'gradient-x': 'gradient-x 15s ease infinite',
-                        'fade-in': 'fade-in 0.8s ease-out forwards'
+                        'gradient-x': 'gradient-x 5s ease-in-out infinite',
+                        'fade-in': 'fade-in 0.8s ease-out forwards',
+                        'shine': 'shine 2s ease-out infinite',
+                        'pulse-glow': 'pulse-glow 3s infinite ease-in-out',
                     },
                     keyframes: {
                         'gradient-x': {
@@ -41,6 +43,14 @@
                         'fade-in': {
                             '0%': { opacity: '0', transform: 'translateY(20px)'},
                             '100%': { opacity: '1', transform: 'translateY(0)'},
+                        },
+                        'shine': {
+                           '0%': { transform: 'translateX(-100%) translateY(-100%) rotate(30deg)' },
+                           '80%, 100%': { transform: 'translateX(100%) translateY(100%) rotate(30deg)' }
+                        },
+                        'pulse-glow': {
+                            '0%, 100%': { boxShadow: '0 0 20px rgba(234, 179, 8, 0.2)' },
+                            '50%': { boxShadow: '0 0 35px rgba(234, 179, 8, 0.4)' }
                         }
                     }
                 }
@@ -54,26 +64,73 @@
             background-color: #0a0a0a;
             color: #F9FAFB;
             background-image: radial-gradient(#1a1a1a 1px, transparent 1px);
-            background-size: 20px 20px;
+            background-size: 25px 25px;
         }
-        .glow-border {
-            border: 1px solid transparent;
-            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; right: 0; height: 400px;
+            background: linear-gradient(180deg, rgba(234, 179, 8, 0.05), transparent);
+            z-index: -2;
+            pointer-events: none;
         }
-        .glow-border:hover {
-            box-shadow: 0 0 20px rgba(234, 179, 8, 0.2);
-            border-color: rgba(234, 179, 8, 0.4);
+        #cursor-spotlight {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(234, 179, 8, 0.06) 0%, rgba(234, 179, 8, 0) 60%);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            z-index: -1;
+            transition: width 0.3s, height 0.3s;
+        }
+        .animated-title {
+            background-size: 200% auto;
+        }
+        .card-link-wrapper {
+            display: block;
+            text-decoration: none;
+            perspective: 1000px;
+            transform: translateZ(0); /* Promotes to a new layer for performance */
         }
         .card {
             background-color: rgba(23, 23, 23, 0.6);
             border: 1px solid #27272a;
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
-            transition: transform 0.3s ease, background-color 0.3s ease;
+            transition: transform 0.2s ease-out, background-color 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
-        .card:hover {
-            transform: translateY(-8px);
-            background-color: rgba(30, 30, 30, 0.8);
+        .card::before {
+            content: "";
+            position: absolute;
+            inset: -1px;
+            border-radius: 0.8rem;
+            background: radial-gradient(300px circle at var(--x) var(--y), rgba(234, 179, 8, 0.3), transparent 80%);
+            opacity: 0;
+            transition: opacity 0.3s ease-out;
+            z-index: -1;
+        }
+        .card-link-wrapper:hover .card::before {
+            opacity: 1;
+        }
+        .card::after { /* Shine Effect */
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient( to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0) 47%, rgba(255, 255, 255, 0.1) 50%, rgba(255, 255, 255, 0) 53%, rgba(255, 255, 255, 0) 100% );
+            pointer-events: none;
+        }
+        .card-link-wrapper:hover .card::after {
+            animation: shine 2.5s ease-out infinite;
+            animation-delay: 0.1s;
         }
         .tag {
             background-color: rgba(234, 179, 8, 0.1);
@@ -84,27 +141,17 @@
             font-weight: 500;
         }
         .category-title {
-            position: relative;
-            padding-bottom: 0.75rem;
+            position: relative; padding-bottom: 0.75rem;
         }
         .category-title::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 50px;
-            height: 3px;
-            background: linear-gradient(90deg, #eab308, #f59e0b);
-            border-radius: 2px;
+            content: ''; position: absolute; bottom: 0; left: 0; width: 50px; height: 3px;
+            background: linear-gradient(90deg, #eab308, #f59e0b); border-radius: 2px;
         }
         .nav-link {
-            transition: color 0.3s ease, background-color 0.3s ease;
+            transition: color 0.3s ease, background-color 0.3s ease, transform 0.2s ease;
         }
-        .nav-link.active, .nav-link:hover {
-            color: #111;
-            background-color: #eab308;
-        }
-        /* Style pour la barre de défilement */
+        .nav-link:hover { transform: translateY(-2px); }
+        .nav-link.active, .nav-link:hover { color: #111; background-color: #eab308; }
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: #111; }
         ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
@@ -112,25 +159,26 @@
     </style>
 </head>
 <body class="antialiased">
+    
+    <div id="cursor-spotlight"></div>
 
     <!-- Conteneur principal -->
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
 
         <!-- En-tête -->
         <header class="text-center py-20 md:py-32 relative overflow-hidden">
-            <div class="absolute inset-0 -z-10 bg-grid-pattern"></div>
-             <div class="animate-fade-in" style="animation-delay: 100ms;">
+            <div class="animate-fade-in" style="animation-delay: 100ms;">
                 <div class="inline-block p-3 mb-5 bg-gray-800/50 border border-gray-700 rounded-lg">
                     <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#eab308" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sparkles"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/><path d="M5 3v4"/><path d="M19 17v4"/><path d="M3 5h4"/><path d="M17 19h4"/></svg>
                 </div>
-                <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-gray-200 via-white to-gray-400">
+                <h1 class="animated-title text-5xl md:text-7xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-yellow-200 via-yellow-400 to-yellow-600 animate-gradient-x">
                     La Sélection d'Excellence
                 </h1>
                 <p class="mt-6 max-w-2xl mx-auto text-lg md:text-xl text-brand-secondary">
                     Une liste méticuleusement organisée des meilleures ressources islamiques pour apprendre, grandir et s'inspirer.
                 </p>
                 <div class="mt-10">
-                    <a href="#categories" class="bg-brand-accent text-brand-dark font-semibold py-3 px-8 rounded-lg hover:bg-brand-accent-hover transition-transform transform hover:scale-105 shadow-lg shadow-yellow-500/10">
+                    <a href="#categories" class="bg-brand-accent text-brand-dark font-semibold py-3 px-8 rounded-lg hover:bg-brand-accent-hover transition-transform transform hover:scale-105 animate-pulse-glow">
                         Explorer les ressources
                     </a>
                 </div>
@@ -155,162 +203,223 @@
             <section id="apps" class="animate-fade-in" style="animation-delay: 500ms;">
                 <h2 class="category-title text-3xl font-bold mb-10">Applications Mobiles</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    <div class="card glow-border rounded-xl p-6">
-                        <h3 class="font-bold text-xl text-white mb-2">Quran.com</h3>
-                        <p class="text-brand-secondary mb-4 h-20">Une expérience de lecture du Coran sans publicité, avec de multiples traductions, tafsirs et récitations.</p>
-                        <div class="flex items-center justify-between">
-                            <div class="flex flex-wrap gap-2"><span class="tag">Coran</span><span class="tag">iOS/Android</span></div>
-                            <a href="https://quran.com/apps" target="_blank" rel="noopener noreferrer" class="text-brand-secondary hover:text-brand-accent transition-colors">Lien</a>
+                    <a href="https://www.quranmajeed.com/" target="_blank" rel="noopener noreferrer" class="card-link-wrapper group">
+                        <div class="card rounded-xl p-6 h-full flex flex-col">
+                            <div class="flex-grow">
+                                <h3 class="font-bold text-xl text-white mb-2 group-hover:text-brand-accent transition-colors">Quran Majeed</h3>
+                                <p class="text-brand-secondary mb-4">Une application Coran complète avec récitations, traductions, tafsir, et de nombreuses autres fonctionnalités pour une étude approfondie.</p>
+                            </div>
+                            <div class="flex items-center justify-between mt-auto pt-4">
+                                <div class="flex flex-wrap gap-2"><span class="tag">Coran</span><span class="tag">Tafsir</span></div>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-brand-secondary group-hover:text-brand-accent transition-colors lucide lucide-arrow-up-right"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+                            </div>
                         </div>
-                    </div>
-                    <div class="card glow-border rounded-xl p-6">
-                        <h3 class="font-bold text-xl text-white mb-2">Pillars: Prayer App</h3>
-                        <p class="text-brand-secondary mb-4 h-20">Application de prière minimaliste et respectueuse de la vie privée. Pas de publicités, pas de distractions.</p>
-                        <div class="flex items-center justify-between">
-                            <div class="flex flex-wrap gap-2"><span class="tag">Prière</span><span class="tag">Open Source</span></div>
-                            <a href="https://www.thepillarsapp.com/" target="_blank" rel="noopener noreferrer" class="text-brand-secondary hover:text-brand-accent transition-colors">Lien</a>
+                    </a>
+                    <a href="https://www.thepillarsapp.com/" target="_blank" rel="noopener noreferrer" class="card-link-wrapper group">
+                        <div class="card rounded-xl p-6 h-full flex flex-col">
+                            <div class="flex-grow">
+                                <h3 class="font-bold text-xl text-white mb-2 group-hover:text-brand-accent transition-colors">Pillars: Prayer App</h3>
+                                <p class="text-brand-secondary mb-4">Application de prière minimaliste et respectueuse de la vie privée. Pas de publicités, pas de distractions.</p>
+                            </div>
+                            <div class="flex items-center justify-between mt-auto pt-4">
+                                <div class="flex flex-wrap gap-2"><span class="tag">Prière</span><span class="tag">Open Source</span></div>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-brand-secondary group-hover:text-brand-accent transition-colors lucide lucide-arrow-up-right"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+                            </div>
                         </div>
-                    </div>
-                    <div class="card glow-border rounded-xl p-6">
-                        <h3 class="font-bold text-xl text-white mb-2">Tarteel AI</h3>
-                        <p class="text-brand-secondary mb-4 h-20">Aide à la mémorisation du Coran grâce à l'IA qui écoute et corrige votre récitation en temps réel.</p>
-                        <div class="flex items-center justify-between">
-                            <div class="flex flex-wrap gap-2"><span class="tag">Coran</span><span class="tag">IA</span></div>
-                            <a href="https://www.tarteel.ai/" target="_blank" rel="noopener noreferrer" class="text-brand-secondary hover:text-brand-accent transition-colors">Lien</a>
+                    </a>
+                    <a href="https://www.tarteel.ai/" target="_blank" rel="noopener noreferrer" class="card-link-wrapper group">
+                        <div class="card rounded-xl p-6 h-full flex flex-col">
+                            <div class="flex-grow">
+                                <h3 class="font-bold text-xl text-white mb-2 group-hover:text-brand-accent transition-colors">Tarteel AI</h3>
+                                <p class="text-brand-secondary mb-4">Aide à la mémorisation du Coran grâce à l'IA qui écoute et corrige votre récitation en temps réel.</p>
+                            </div>
+                            <div class="flex items-center justify-between mt-auto pt-4">
+                                <div class="flex flex-wrap gap-2"><span class="tag">Coran</span><span class="tag">IA</span></div>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-brand-secondary group-hover:text-brand-accent transition-colors lucide lucide-arrow-up-right"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+                            </div>
                         </div>
-                    </div>
-                     <div class="card glow-border rounded-xl p-6">
-                        <h3 class="font-bold text-xl text-white mb-2">Hadith Collection</h3>
-                        <p class="text-brand-secondary mb-4 h-20">Accédez à presque toutes les collections majeures de hadiths (Sahih Bukhari, Muslim, etc.) sur votre appareil.</p>
-                        <div class="flex items-center justify-between">
-                            <div class="flex flex-wrap gap-2"><span class="tag">Hadith</span><span class="tag">Android</span></div>
-                            <a href="https://play.google.com/store/apps/details?id=com.greentech.hadith" target="_blank" rel="noopener noreferrer" class="text-brand-secondary hover:text-brand-accent transition-colors">Lien</a>
+                    </a>
+                    <a href="https://play.google.com/store/apps/details?id=com.greentech.hadith" target="_blank" rel="noopener noreferrer" class="card-link-wrapper group">
+                        <div class="card rounded-xl p-6 h-full flex flex-col">
+                            <div class="flex-grow">
+                                <h3 class="font-bold text-xl text-white mb-2 group-hover:text-brand-accent transition-colors">Hadith Collection</h3>
+                                <p class="text-brand-secondary mb-4">Accédez à presque toutes les collections majeures de hadiths (Sahih Bukhari, Muslim, etc.) sur votre appareil.</p>
+                            </div>
+                            <div class="flex items-center justify-between mt-auto pt-4">
+                                <div class="flex flex-wrap gap-2"><span class="tag">Hadith</span><span class="tag">Android</span></div>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-brand-secondary group-hover:text-brand-accent transition-colors lucide lucide-arrow-up-right"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+                            </div>
                         </div>
-                    </div>
-                    <div class="card glow-border rounded-xl p-6">
-                        <h3 class="font-bold text-xl text-white mb-2">Zoya</h3>
-                        <p class="text-brand-secondary mb-4 h-20">Analyse la conformité à la charia des actions et des fonds d'investissement pour vous aider à investir halal.</p>
-                        <div class="flex items-center justify-between">
-                            <div class="flex flex-wrap gap-2"><span class="tag">Finance</span><span class="tag">Investissement</span></div>
-                            <a href="https://www.zoya.finance/" target="_blank" rel="noopener noreferrer" class="text-brand-secondary hover:text-brand-accent transition-colors">Lien</a>
+                    </a>
+                    <a href="https://www.zoya.finance/" target="_blank" rel="noopener noreferrer" class="card-link-wrapper group">
+                        <div class="card rounded-xl p-6 h-full flex flex-col">
+                           <div class="flex-grow">
+                                <h3 class="font-bold text-xl text-white mb-2 group-hover:text-brand-accent transition-colors">Zoya</h3>
+                                <p class="text-brand-secondary mb-4">Analyse la conformité à la charia des actions et des fonds d'investissement pour vous aider à investir halal.</p>
+                            </div>
+                            <div class="flex items-center justify-between mt-auto pt-4">
+                                <div class="flex flex-wrap gap-2"><span class="tag">Finance</span><span class="tag">Investissement</span></div>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-brand-secondary group-hover:text-brand-accent transition-colors lucide lucide-arrow-up-right"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+                            </div>
                         </div>
-                    </div>
+                    </a>
                 </div>
             </section>
 
-            <!-- Catégorie: Sites Web & Plateformes -->
+            <!-- Autres sections (Sites Web, Éducation, etc.) avec la même structure de carte cliquable -->
             <section id="websites" class="animate-fade-in" style="animation-delay: 600ms;">
                 <h2 class="category-title text-3xl font-bold mb-10">Sites Web & Plateformes</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                     <div class="card glow-border rounded-xl p-6">
-                        <h3 class="font-bold text-xl text-white mb-2">Sunnah.com</h3>
-                        <p class="text-brand-secondary mb-4 h-20">La référence en ligne pour les collections de hadiths du Prophète Muhammad (ﷺ) et leurs traductions.</p>
-                        <div class="flex items-center justify-between">
-                            <div class="flex flex-wrap gap-2"><span class="tag">Hadith</span><span class="tag">Référence</span></div>
-                            <a href="https://sunnah.com/" target="_blank" rel="noopener noreferrer" class="text-brand-secondary hover:text-brand-accent transition-colors">Lien</a>
+                     <a href="https://sunnah.com/" target="_blank" rel="noopener noreferrer" class="card-link-wrapper group">
+                        <div class="card rounded-xl p-6 h-full flex flex-col">
+                            <div class="flex-grow">
+                                <h3 class="font-bold text-xl text-white mb-2 group-hover:text-brand-accent transition-colors">Sunnah.com</h3>
+                                <p class="text-brand-secondary mb-4">La référence en ligne pour les collections de hadiths du Prophète Muhammad (ﷺ) et leurs traductions.</p>
+                            </div>
+                            <div class="flex items-center justify-between mt-auto pt-4">
+                                <div class="flex flex-wrap gap-2"><span class="tag">Hadith</span><span class="tag">Référence</span></div>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-brand-secondary group-hover:text-brand-accent transition-colors lucide lucide-arrow-up-right"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+                            </div>
                         </div>
-                    </div>
-                    <div class="card glow-border rounded-xl p-6">
-                        <h3 class="font-bold text-xl text-white mb-2">Yaqeen Institute</h3>
-                        <p class="text-brand-secondary mb-4 h-20">Recherches académiques et contenus de qualité pour dissiper les doutes et inspirer la conviction (imaan).</p>
-                        <div class="flex items-center justify-between">
-                            <div class="flex flex-wrap gap-2"><span class="tag">Recherche</span><span class="tag">Dawa</span></div>
-                            <a href="https://yaqeeninstitute.org/" target="_blank" rel="noopener noreferrer" class="text-brand-secondary hover:text-brand-accent transition-colors">Lien</a>
+                    </a>
+                    <a href="https://yaqeeninstitute.org/" target="_blank" rel="noopener noreferrer" class="card-link-wrapper group">
+                        <div class="card rounded-xl p-6 h-full flex flex-col">
+                            <div class="flex-grow">
+                                <h3 class="font-bold text-xl text-white mb-2 group-hover:text-brand-accent transition-colors">Yaqeen Institute</h3>
+                                <p class="text-brand-secondary mb-4">Recherches académiques et contenus de qualité pour dissiper les doutes et inspirer la conviction (imaan).</p>
+                            </div>
+                            <div class="flex items-center justify-between mt-auto pt-4">
+                                <div class="flex flex-wrap gap-2"><span class="tag">Recherche</span><span class="tag">Dawa</span></div>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-brand-secondary group-hover:text-brand-accent transition-colors lucide lucide-arrow-up-right"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+                            </div>
                         </div>
-                    </div>
-                    <div class="card glow-border rounded-xl p-6">
-                        <h3 class="font-bold text-xl text-white mb-2">Muslim Central</h3>
-                        <p class="text-brand-secondary mb-4 h-20">Une immense bibliothèque de conférences audio islamiques de centaines de savants et de conférenciers.</p>
-                        <div class="flex items-center justify-between">
-                            <div class="flex flex-wrap gap-2"><span class="tag">Audio</span><span class="tag">Conférences</span></div>
-                            <a href="https://muslimcentral.com/" target="_blank" rel="noopener noreferrer" class="text-brand-secondary hover:text-brand-accent transition-colors">Lien</a>
+                    </a>
+                    <a href="https://muslimcentral.com/" target="_blank" rel="noopener noreferrer" class="card-link-wrapper group">
+                        <div class="card rounded-xl p-6 h-full flex flex-col">
+                            <div class="flex-grow">
+                                <h3 class="font-bold text-xl text-white mb-2 group-hover:text-brand-accent transition-colors">Muslim Central</h3>
+                                <p class="text-brand-secondary mb-4">Une immense bibliothèque de conférences audio islamiques de centaines de savants et de conférenciers.</p>
+                            </div>
+                            <div class="flex items-center justify-between mt-auto pt-4">
+                                <div class="flex flex-wrap gap-2"><span class="tag">Audio</span><span class="tag">Conférences</span></div>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-brand-secondary group-hover:text-brand-accent transition-colors lucide lucide-arrow-up-right"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+                            </div>
                         </div>
-                    </div>
+                    </a>
                 </div>
             </section>
             
-            <!-- Catégorie: Éducation & Apprentissage -->
             <section id="learning" class="animate-fade-in" style="animation-delay: 700ms;">
                 <h2 class="category-title text-3xl font-bold mb-10">Éducation & Apprentissage</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    <div class="card glow-border rounded-xl p-6">
-                        <h3 class="font-bold text-xl text-white mb-2">Bayyinah TV</h3>
-                        <p class="text-brand-secondary mb-4 h-20">Plateforme d'apprentissage de l'arabe coranique et d'études approfondies du Coran par Nouman Ali Khan.</p>
-                        <div class="flex items-center justify-between">
-                            <div class="flex flex-wrap gap-2"><span class="tag">Coran</span><span class="tag">Arabe</span></div>
-                            <a href="https://bayyinahtv.com/" target="_blank" rel="noopener noreferrer" class="text-brand-secondary hover:text-brand-accent transition-colors">Lien</a>
+                    <a href="https://bayyinahtv.com/" target="_blank" rel="noopener noreferrer" class="card-link-wrapper group">
+                        <div class="card rounded-xl p-6 h-full flex flex-col">
+                            <div class="flex-grow">
+                                <h3 class="font-bold text-xl text-white mb-2 group-hover:text-brand-accent transition-colors">Bayyinah TV</h3>
+                                <p class="text-brand-secondary mb-4">Plateforme d'apprentissage de l'arabe coranique et d'études approfondies du Coran par Nouman Ali Khan.</p>
+                            </div>
+                            <div class="flex items-center justify-between mt-auto pt-4">
+                                <div class="flex flex-wrap gap-2"><span class="tag">Coran</span><span class="tag">Arabe</span></div>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-brand-secondary group-hover:text-brand-accent transition-colors lucide lucide-arrow-up-right"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+                            </div>
                         </div>
-                    </div>
-                    <div class="card glow-border rounded-xl p-6">
-                        <h3 class="font-bold text-xl text-white mb-2">SeekersGuidance</h3>
-                        <p class="text-brand-secondary mb-4 h-20">Cours en ligne gratuits et fiables sur les sciences islamiques, dispensés par des savants qualifiés.</p>
-                        <div class="flex items-center justify-between">
-                            <div class="flex flex-wrap gap-2"><span class="tag">Cours</span><span class="tag">Savoir</span></div>
-                            <a href="https://seekersguidance.org/" target="_blank" rel="noopener noreferrer" class="text-brand-secondary hover:text-brand-accent transition-colors">Lien</a>
+                    </a>
+                    <a href="https://seekersguidance.org/" target="_blank" rel="noopener noreferrer" class="card-link-wrapper group">
+                        <div class="card rounded-xl p-6 h-full flex flex-col">
+                            <div class="flex-grow">
+                                <h3 class="font-bold text-xl text-white mb-2 group-hover:text-brand-accent transition-colors">SeekersGuidance</h3>
+                                <p class="text-brand-secondary mb-4">Cours en ligne gratuits et fiables sur les sciences islamiques, dispensés par des savants qualifiés.</p>
+                            </div>
+                            <div class="flex items-center justify-between mt-auto pt-4">
+                                <div class="flex flex-wrap gap-2"><span class="tag">Cours</span><span class="tag">Savoir</span></div>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-brand-secondary group-hover:text-brand-accent transition-colors lucide lucide-arrow-up-right"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+                            </div>
                         </div>
-                    </div>
-                    <div class="card glow-border rounded-xl p-6">
-                        <h3 class="font-bold text-xl text-white mb-2">Kalamullah</h3>
-                        <p class="text-brand-secondary mb-4 h-20">Une bibliothèque numérique de livres islamiques authentiques disponibles en téléchargement gratuit.</p>
-                        <div class="flex items-center justify-between">
-                            <div class="flex flex-wrap gap-2"><span class="tag">Livres</span><span class="tag">eBooks</span></div>
-                            <a href="https://www.kalamullah.com/" target="_blank" rel="noopener noreferrer" class="text-brand-secondary hover:text-brand-accent transition-colors">Lien</a>
+                    </a>
+                    <a href="https://www.kalamullah.com/" target="_blank" rel="noopener noreferrer" class="card-link-wrapper group">
+                        <div class="card rounded-xl p-6 h-full flex flex-col">
+                            <div class="flex-grow">
+                                <h3 class="font-bold text-xl text-white mb-2 group-hover:text-brand-accent transition-colors">Kalamullah</h3>
+                                <p class="text-brand-secondary mb-4">Une bibliothèque numérique de livres islamiques authentiques disponibles en téléchargement gratuit.</p>
+                            </div>
+                            <div class="flex items-center justify-between mt-auto pt-4">
+                                <div class="flex flex-wrap gap-2"><span class="tag">Livres</span><span class="tag">eBooks</span></div>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-brand-secondary group-hover:text-brand-accent transition-colors lucide lucide-arrow-up-right"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+                            </div>
                         </div>
-                    </div>
+                    </a>
                 </div>
             </section>
 
-            <!-- Catégorie: Chaînes YouTube -->
             <section id="youtube" class="animate-fade-in" style="animation-delay: 800ms;">
                 <h2 class="category-title text-3xl font-bold mb-10">Chaînes YouTube</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    <div class="card glow-border rounded-xl p-6">
-                        <h3 class="font-bold text-xl text-white mb-2">FreeQuranEducation</h3>
-                        <p class="text-brand-secondary mb-4 h-20">Vidéos animées de haute qualité expliquant des histoires du Coran et des concepts islamiques.</p>
-                        <div class="flex items-center justify-between">
-                            <div class="flex flex-wrap gap-2"><span class="tag">Animation</span><span class="tag">Enfants</span></div>
-                            <a href="https://www.youtube.com/c/FreeQuranEducation" target="_blank" rel="noopener noreferrer" class="text-brand-secondary hover:text-brand-accent transition-colors">Lien</a>
+                    <a href="https://www.youtube.com/c/FreeQuranEducation" target="_blank" rel="noopener noreferrer" class="card-link-wrapper group">
+                        <div class="card rounded-xl p-6 h-full flex flex-col">
+                            <div class="flex-grow">
+                                <h3 class="font-bold text-xl text-white mb-2 group-hover:text-brand-accent transition-colors">FreeQuranEducation</h3>
+                                <p class="text-brand-secondary mb-4">Vidéos animées de haute qualité expliquant des histoires du Coran et des concepts islamiques.</p>
+                            </div>
+                            <div class="flex items-center justify-between mt-auto pt-4">
+                                <div class="flex flex-wrap gap-2"><span class="tag">Animation</span><span class="tag">Enfants</span></div>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-brand-secondary group-hover:text-brand-accent transition-colors lucide lucide-arrow-up-right"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+                            </div>
                         </div>
-                    </div>
-                     <div class="card glow-border rounded-xl p-6">
-                        <h3 class="font-bold text-xl text-white mb-2">The Prophetic Path</h3>
-                        <p class="text-brand-secondary mb-4 h-20">Série de vidéos sur la vie du Prophète Muhammad (ﷺ) par Sh. Omar Suleiman, avec une excellente production.</p>
-                        <div class="flex items-center justify-between">
-                            <div class="flex flex-wrap gap-2"><span class="tag">Seerah</span><span class="tag">Histoire</span></div>
-                            <a href="https://www.youtube.com/c/ThePropheticPath" target="_blank" rel="noopener noreferrer" class="text-brand-secondary hover:text-brand-accent transition-colors">Lien</a>
+                    </a>
+                     <a href="https://www.youtube.com/c/ThePropheticPath" target="_blank" rel="noopener noreferrer" class="card-link-wrapper group">
+                        <div class="card rounded-xl p-6 h-full flex flex-col">
+                            <div class="flex-grow">
+                                <h3 class="font-bold text-xl text-white mb-2 group-hover:text-brand-accent transition-colors">The Prophetic Path</h3>
+                                <p class="text-brand-secondary mb-4">Série de vidéos sur la vie du Prophète Muhammad (ﷺ) par Sh. Omar Suleiman, avec une excellente production.</p>
+                            </div>
+                            <div class="flex items-center justify-between mt-auto pt-4">
+                                <div class="flex flex-wrap gap-2"><span class="tag">Seerah</span><span class="tag">Histoire</span></div>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-brand-secondary group-hover:text-brand-accent transition-colors lucide lucide-arrow-up-right"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+                            </div>
                         </div>
-                    </div>
-                     <div class="card glow-border rounded-xl p-6">
-                        <h3 class="font-bold text-xl text-white mb-2">Blogging Theology</h3>
-                        <p class="text-brand-secondary mb-4 h-20">Discussions et interviews académiques sur la théologie islamique, la philosophie et l'apologétique.</p>
-                        <div class="flex items-center justify-between">
-                            <div class="flex flex-wrap gap-2"><span class="tag">Théologie</span><span class="tag">Académique</span></div>
-                            <a href="https://www.youtube.com/c/BloggingTheology" target="_blank" rel="noopener noreferrer" class="text-brand-secondary hover:text-brand-accent transition-colors">Lien</a>
+                    </a>
+                     <a href="https://www.youtube.com/c/BloggingTheology" target="_blank" rel="noopener noreferrer" class="card-link-wrapper group">
+                        <div class="card rounded-xl p-6 h-full flex flex-col">
+                            <div class="flex-grow">
+                                <h3 class="font-bold text-xl text-white mb-2 group-hover:text-brand-accent transition-colors">Blogging Theology</h3>
+                                <p class="text-brand-secondary mb-4">Discussions et interviews académiques sur la théologie islamique, la philosophie et l'apologétique.</p>
+                            </div>
+                            <div class="flex items-center justify-between mt-auto pt-4">
+                                <div class="flex flex-wrap gap-2"><span class="tag">Théologie</span><span class="tag">Académique</span></div>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-brand-secondary group-hover:text-brand-accent transition-colors lucide lucide-arrow-up-right"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+                            </div>
                         </div>
-                    </div>
+                    </a>
                 </div>
             </section>
             
-            <!-- Catégorie: Outils pour Développeurs -->
             <section id="dev" class="animate-fade-in" style="animation-delay: 900ms;">
                 <h2 class="category-title text-3xl font-bold mb-10">Outils pour Développeurs</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    <div class="card glow-border rounded-xl p-6">
-                        <h3 class="font-bold text-xl text-white mb-2">Al Quran Cloud API</h3>
-                        <p class="text-brand-secondary mb-4 h-20">API RESTful pour accéder au texte coranique, traductions, tafsirs et récitations audio.</p>
-                        <div class="flex items-center justify-between">
-                            <div class="flex flex-wrap gap-2"><span class="tag">API</span><span class="tag">Coran</span></div>
-                            <a href="https://alquran.cloud/api" target="_blank" rel="noopener noreferrer" class="text-brand-secondary hover:text-brand-accent transition-colors">Lien</a>
+                    <a href="https://alquran.cloud/api" target="_blank" rel="noopener noreferrer" class="card-link-wrapper group">
+                        <div class="card rounded-xl p-6 h-full flex flex-col">
+                            <div class="flex-grow">
+                                <h3 class="font-bold text-xl text-white mb-2 group-hover:text-brand-accent transition-colors">Al Quran Cloud API</h3>
+                                <p class="text-brand-secondary mb-4">API RESTful pour accéder au texte coranique, traductions, tafsirs et récitations audio.</p>
+                            </div>
+                            <div class="flex items-center justify-between mt-auto pt-4">
+                                <div class="flex flex-wrap gap-2"><span class="tag">API</span><span class="tag">Coran</span></div>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-brand-secondary group-hover:text-brand-accent transition-colors lucide lucide-arrow-up-right"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+                            </div>
                         </div>
-                    </div>
-                    <div class="card glow-border rounded-xl p-6">
-                        <h3 class="font-bold text-xl text-white mb-2">PrayerTimes API</h3>
-                        <p class="text-brand-secondary mb-4 h-20">API gratuite et facile à utiliser pour obtenir les horaires de prière pour n'importe quel lieu dans le monde.</p>
-                        <div class="flex items-center justify-between">
-                            <div class="flex flex-wrap gap-2"><span class="tag">API</span><span class="tag">Prière</span></div>
-                            <a href="https://aladhan.com/prayer-times-api" target="_blank" rel="noopener noreferrer" class="text-brand-secondary hover:text-brand-accent transition-colors">Lien</a>
+                    </a>
+                    <a href="https://aladhan.com/prayer-times-api" target="_blank" rel="noopener noreferrer" class="card-link-wrapper group">
+                        <div class="card rounded-xl p-6 h-full flex flex-col">
+                            <div class="flex-grow">
+                                <h3 class="font-bold text-xl text-white mb-2 group-hover:text-brand-accent transition-colors">PrayerTimes API</h3>
+                                <p class="text-brand-secondary mb-4">API gratuite et facile à utiliser pour obtenir les horaires de prière pour n'importe quel lieu dans le monde.</p>
+                            </div>
+                            <div class="flex items-center justify-between mt-auto pt-4">
+                                <div class="flex flex-wrap gap-2"><span class="tag">API</span><span class="tag">Prière</span></div>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-brand-secondary group-hover:text-brand-accent transition-colors lucide lucide-arrow-up-right"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+                            </div>
                         </div>
-                    </div>
+                    </a>
                 </div>
             </section>
 
@@ -321,22 +430,51 @@
             <p class="text-brand-secondary">
                 Conçu avec soin. Contribuez et ajoutez des ressources sur <a href="#" class="text-brand-accent hover:underline">GitHub</a>.
             </p>
-            <p class="text-sm text-gray-600 mt-2">© 2024 - Un projet pour la communauté.</p>
+            <p class="text-sm text-gray-600 mt-2">© 2025 - Un projet pour la communauté.</p>
         </footer>
     </div>
     
-    <!-- Script pour la navigation active et le défilement -->
+    <!-- Scripts pour les effets visuels et l'interactivité -->
     <script>
         document.addEventListener("DOMContentLoaded", function() {
+            // --- Effet de projecteur pour le curseur ---
+            const spotlight = document.getElementById('cursor-spotlight');
+            if (spotlight) {
+                document.addEventListener('mousemove', (e) => {
+                    spotlight.style.left = `${e.clientX}px`;
+                    spotlight.style.top = `${e.clientY}px`;
+                });
+            }
+
+            // --- Effets 3D et bordure dynamique sur les cartes ---
+            document.querySelectorAll('.card-link-wrapper').forEach(cardWrapper => {
+                const card = cardWrapper.querySelector('.card');
+                cardWrapper.addEventListener('mousemove', (e) => {
+                    const rect = cardWrapper.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+                    const rotateX = ((y - centerY) / centerY) * -8; // Degré de rotation
+                    const rotateY = ((x - centerX) / centerX) * 8;
+                    
+                    card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+                    card.style.setProperty('--x', `${x}px`);
+                    card.style.setProperty('--y', `${y}px`);
+                });
+                cardWrapper.addEventListener('mouseleave', () => {
+                    card.style.transform = 'rotateX(0deg) rotateY(0deg)';
+                });
+            });
+
+            // --- Navigation active au défilement ---
             const sections = document.querySelectorAll('section');
             const navLinks = document.querySelectorAll('.nav-link');
-
             const observerOptions = {
                 root: null,
-                rootMargin: "-50% 0px -50% 0px", // Active le lien quand la section est au milieu de l'écran
+                rootMargin: "-50% 0px -50% 0px",
                 threshold: 0
             };
-
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
@@ -349,12 +487,9 @@
                     }
                 });
             }, observerOptions);
-
-            sections.forEach(section => {
-                observer.observe(section);
-            });
+            sections.forEach(section => observer.observe(section));
             
-            // Gestion du clic pour le scroll-smooth
+            // --- Défilement fluide au clic ---
             navLinks.forEach(anchor => {
                 anchor.addEventListener('click', function (e) {
                     e.preventDefault();
@@ -367,4 +502,7 @@
     </script>
 </body>
 </html>
+
+
+
 
