@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Awesome Islamic Resources - La Sélection d'Excellence</title>
+    <title>Awesome Islamic Resources - La Sélection d'Excellence v2.0</title>
     
     <!-- Tailwind CSS via CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -12,6 +12,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- NEW (Feature #18): PWA Manifest Link for 'Add to Homescreen' capability -->
+    <link rel="manifest" href="manifest.json">
     
     <!-- Configuration personnalisée de Tailwind -->
     <script>
@@ -25,7 +28,7 @@
                         'brand-dark': '#0a0a0a',
                         'brand-bg': '#111111',
                         'brand-light': '#F9FAFB',
-                        'brand-accent': '#eab308', // Jaune doré plus vibrant
+                        'brand-accent': '#eab308', 
                         'brand-accent-hover': '#f59e0b',
                         'brand-secondary': '#a1a1aa',
                     },
@@ -60,102 +63,97 @@
     
     <!-- Styles CSS personnalisés pour le design avancé -->
     <style>
+        /* Base styles for dark mode */
         body {
             background-color: #0a0a0a;
             color: #F9FAFB;
             background-image: radial-gradient(#1a1a1a 1px, transparent 1px);
             background-size: 25px 25px;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
+        
         body::before {
-            content: '';
-            position: fixed;
-            top: 0; left: 0; right: 0; height: 400px;
+            content: ''; position: fixed; top: 0; left: 0; right: 0; height: 400px;
             background: linear-gradient(180deg, rgba(234, 179, 8, 0.05), transparent);
-            z-index: -2;
-            pointer-events: none;
+            z-index: -2; pointer-events: none;
         }
+
         #cursor-spotlight {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 400px;
-            height: 400px;
+            position: fixed; top: 0; left: 0; width: 400px; height: 400px;
             background: radial-gradient(circle, rgba(234, 179, 8, 0.06) 0%, rgba(234, 179, 8, 0) 60%);
-            border-radius: 50%;
-            transform: translate(-50%, -50%);
-            pointer-events: none;
-            z-index: -1;
-            transition: width 0.3s, height 0.3s;
+            border-radius: 50%; transform: translate(-50%, -50%);
+            pointer-events: none; z-index: -1; transition: width 0.3s, height 0.3s;
         }
-        .animated-title {
-            background-size: 200% auto;
-        }
-        .card-link-wrapper {
-            display: block;
-            text-decoration: none;
-            perspective: 1000px;
-            transform: translateZ(0); /* Promotes to a new layer for performance */
-        }
+
+        .animated-title { background-size: 200% auto; }
+
+        .card-link-wrapper { display: block; text-decoration: none; perspective: 1000px; }
+
         .card {
-            background-color: rgba(23, 23, 23, 0.6);
             border: 1px solid #27272a;
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
             transition: transform 0.2s ease-out, background-color 0.3s ease;
-            position: relative;
-            overflow: hidden;
+            position: relative; overflow: hidden;
+            background-color: rgba(23, 23, 23, 0.6); 
+            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
         }
+        
         .card::before {
-            content: "";
-            position: absolute;
-            inset: -1px;
-            border-radius: 0.8rem;
+            content: ""; position: absolute; inset: -1px; border-radius: 0.8rem;
             background: radial-gradient(300px circle at var(--x) var(--y), rgba(234, 179, 8, 0.3), transparent 80%);
-            opacity: 0;
-            transition: opacity 0.3s ease-out;
-            z-index: -1;
+            opacity: 0; transition: opacity 0.3s ease-out; z-index: -1;
         }
-        .card-link-wrapper:hover .card::before {
-            opacity: 1;
-        }
+        .card-link-wrapper:hover .card::before { opacity: 1; }
+        
         .card::after { /* Shine Effect */
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
+            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
             background: linear-gradient( to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0) 47%, rgba(255, 255, 255, 0.1) 50%, rgba(255, 255, 255, 0) 53%, rgba(255, 255, 255, 0) 100% );
             pointer-events: none;
         }
-        .card-link-wrapper:hover .card::after {
-            animation: shine 2.5s ease-out infinite;
-            animation-delay: 0.1s;
-        }
-        .tag {
-            background-color: rgba(234, 179, 8, 0.1);
-            color: #eab308;
-            padding: 4px 12px;
-            border-radius: 9999px;
-            font-size: 0.8rem;
-            font-weight: 500;
-        }
-        .category-title {
-            position: relative; padding-bottom: 0.75rem;
-        }
+        .card-link-wrapper:hover .card::after { animation: shine 2.5s ease-out infinite; animation-delay: 0.1s; }
+
+        .tag { cursor: pointer; transition: background-color 0.2s, color 0.2s; background-color: rgba(234, 179, 8, 0.1); color: #eab308; }
+        .tag:hover { background-color: rgba(234, 179, 8, 0.2); }
+
+        .category-title { position: relative; padding-bottom: 0.75rem; }
         .category-title::after {
             content: ''; position: absolute; bottom: 0; left: 0; width: 50px; height: 3px;
             background: linear-gradient(90deg, #eab308, #f59e0b); border-radius: 2px;
         }
-        .nav-link {
-            transition: color 0.3s ease, background-color 0.3s ease, transform 0.2s ease;
-        }
+
+        .nav-link { transition: color 0.3s ease, background-color 0.3s ease, transform 0.2s ease; color: #ffffff; }
         .nav-link:hover { transform: translateY(-2px); }
         .nav-link.active, .nav-link:hover { color: #111; background-color: #eab308; }
+
+        /* Custom scrollbar */
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: #111; }
         ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: #444; }
+
+        /* NEW (Feature #4): Back to top button */
+        #back-to-top {
+            position: fixed; bottom: -50px; right: 20px;
+            transition: bottom 0.3s ease-in-out;
+            opacity: 0.8;
+        }
+        #back-to-top:hover { opacity: 1; }
+
+        /* NEW (Feature #13): Modal styles */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0,0,0,0.7); backdrop-filter: blur(5px);
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
+        }
+        .modal-overlay.active { opacity: 1; pointer-events: all; }
+        .modal-content {
+            padding: 2rem; border-radius: 0.75rem;
+            width: 90%; max-width: 500px;
+            transform: scale(0.95); transition: transform 0.3s ease;
+        }
+        .modal-overlay.active .modal-content { transform: scale(1); }
+        .modal-content { background-color: #171717; border: 1px solid #27272a; }
+
     </style>
 </head>
 <body class="antialiased">
@@ -163,318 +161,343 @@
     <div id="cursor-spotlight"></div>
 
     <!-- Conteneur principal -->
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative">
+        <!-- NEW (Feature #3, #5): Top bar for toggles -->
+        <div class="absolute top-4 right-4 flex items-center gap-4 z-30">
+            <!-- Feature #5: Language Switcher -->
+            <div class="flex items-center gap-1 bg-gray-800/50 border border-gray-700 rounded-lg p-1 text-sm">
+                <button onclick="setLanguage('fr')" class="lang-btn active lang-fr px-2 py-1 rounded-md">FR</button>
+                <button onclick="setLanguage('en')" class="lang-btn lang-en px-2 py-1 rounded-md">EN</button>
+            </div>
+        </div>
+        
         <!-- En-tête -->
         <header class="text-center py-20 md:py-32 relative overflow-hidden">
             <div class="animate-fade-in" style="animation-delay: 100ms;">
                 <div class="inline-block p-3 mb-5 bg-gray-800/50 border border-gray-700 rounded-lg">
                     <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#eab308" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sparkles"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/><path d="M5 3v4"/><path d="M19 17v4"/><path d="M3 5h4"/><path d="M17 19h4"/></svg>
                 </div>
-                <h1 class="animated-title text-5xl md:text-7xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-yellow-200 via-yellow-400 to-yellow-600 animate-gradient-x">
+                <h1 data-lang="fr:La Sélection d'Excellence|en:The Excellence Selection" class="animated-title text-5xl md:text-7xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-yellow-200 via-yellow-400 to-yellow-600 animate-gradient-x">
                     La Sélection d'Excellence
                 </h1>
-                <p class="mt-6 max-w-2xl mx-auto text-lg md:text-xl text-brand-secondary">
+                <p data-lang="fr:Une liste méticuleusement organisée des meilleures ressources islamiques pour apprendre, grandir et s'inspirer.|en:A meticulously curated list of the best Islamic resources to learn, grow, and get inspired." class="mt-6 max-w-2xl mx-auto text-lg md:text-xl text-brand-secondary">
                     Une liste méticuleusement organisée des meilleures ressources islamiques pour apprendre, grandir et s'inspirer.
                 </p>
-                <div class="mt-10">
-                    <a href="#categories" class="bg-brand-accent text-brand-dark font-semibold py-3 px-8 rounded-lg hover:bg-brand-accent-hover transition-transform transform hover:scale-105 animate-pulse-glow">
+                <div class="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
+                    <a href="#categories" data-lang="fr:Explorer|en:Explore" class="bg-brand-accent text-brand-dark font-semibold py-3 px-8 rounded-lg hover:bg-brand-accent-hover transition-transform transform hover:scale-105 animate-pulse-glow">
                         Explorer les ressources
                     </a>
+                     <!-- NEW (Feature #13): Contribution Button -->
+                    <button id="open-suggest-modal" data-lang="fr:Suggérer une ressource|en:Suggest a Resource" class="font-semibold py-3 px-8 rounded-lg transition-transform transform hover:scale-105 border border-brand-accent text-brand-accent hover:bg-brand-accent hover:text-brand-dark">
+                        Suggérer une ressource
+                    </button>
                 </div>
             </div>
         </header>
+
+        <!-- NEW (Feature #7): Resource of the week -->
+        <section id="featured" class="mb-20 animate-fade-in" style="animation-delay: 200ms;">
+            <h2 data-lang="fr:Ressource de la semaine|en:Resource of the Week" class="category-title text-3xl font-bold mb-8 text-center">Ressource de la semaine</h2>
+            <div class="max-w-4xl mx-auto">
+                <a href="#" id="featured-link" target="_blank" rel="noopener noreferrer" class="card-link-wrapper group">
+                    <div class="card rounded-xl p-8 flex flex-col md:flex-row items-center gap-8">
+                        <img src="https://placehold.co/100x100/171717/eab308?text=..." alt="Featured Resource Logo" id="featured-img" class="w-24 h-24 rounded-lg object-cover">
+                        <div class="text-center md:text-left">
+                            <h3 id="featured-title" class="font-bold text-2xl mb-2 group-hover:text-brand-accent transition-colors">Chargement...</h3>
+                            <p id="featured-desc" data-lang="fr:Recherches académiques et contenus de qualité pour dissiper les doutes et inspirer la conviction (imaan).|en:Academic research and quality content to dispel doubts and inspire conviction (imaan)." class="text-brand-secondary mb-4">Une ressource exceptionnelle, sélectionnée juste pour vous.</p>
+                             <div id="featured-tags" class="flex items-center justify-center md:justify-start flex-wrap gap-2">
+                                <!-- Tags will be injected here -->
+                             </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </section>
         
-        <!-- Barre de navigation des catégories -->
+        <!-- Barre de navigation et filtres -->
         <nav id="categories" class="sticky top-0 z-20 bg-brand-dark/80 backdrop-blur-lg py-4 mb-16 animate-fade-in" style="animation-delay: 300ms;">
+            <!-- NEW (Feature #1 & #6): Search bar -->
+            <div class="p-4">
+                <input type="search" id="search-input" data-lang-placeholder="fr:Rechercher une ressource...|en:Search for a resource..." placeholder="Rechercher une ressource..." class="w-full max-w-xl mx-auto block p-3 rounded-lg bg-gray-800 border border-gray-700 focus:border-brand-accent focus:outline-none transition">
+            </div>
             <div class="flex justify-center items-center flex-wrap gap-2 md:gap-4 px-2">
-                <a href="#apps" class="nav-link text-white font-medium py-2 px-4 rounded-lg">Applications</a>
-                <a href="#websites" class="nav-link text-white font-medium py-2 px-4 rounded-lg">Sites Web</a>
-                <a href="#learning" class="nav-link text-white font-medium py-2 px-4 rounded-lg">Éducation</a>
-                <a href="#youtube" class="nav-link text-white font-medium py-2 px-4 rounded-lg">YouTube</a>
-                <a href="#dev" class="nav-link text-white font-medium py-2 px-4 rounded-lg">Développeurs</a>
+                <a href="#apps" class="nav-link font-medium py-2 px-4 rounded-lg" data-lang="fr:Applications|en:Apps">Applications</a>
+                <a href="#websites" class="nav-link font-medium py-2 px-4 rounded-lg" data-lang="fr:Sites Web|en:Websites">Sites Web</a>
+                <a href="#learning" class="nav-link font-medium py-2 px-4 rounded-lg" data-lang="fr:Éducation|en:Education">Éducation</a>
+                <a href="#youtube" class="nav-link font-medium py-2 px-4 rounded-lg">YouTube</a>
+                <!-- NEW (Feature #10 & #11): New categories -->
+                <a href="#books" class="nav-link font-medium py-2 px-4 rounded-lg" data-lang="fr:Livres|en:Books">Livres</a>
+                <a href="#podcasts" class="nav-link font-medium py-2 px-4 rounded-lg">Podcasts</a>
+                <a href="#dev" class="nav-link font-medium py-2 px-4 rounded-lg" data-lang="fr:Développeurs|en:Developers">Développeurs</a>
             </div>
         </nav>
 
         <!-- Grille des ressources -->
-        <main class="space-y-20 pb-24">
+        <main id="resource-grid" class="space-y-20 pb-24">
 
             <!-- Catégorie: Applications Mobiles -->
-            <section id="apps" class="animate-fade-in" style="animation-delay: 500ms;">
-                <h2 class="category-title text-3xl font-bold mb-10">Applications Mobiles</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    <a href="https://www.quranmajeed.com/" target="_blank" rel="noopener noreferrer" class="card-link-wrapper group">
-                        <div class="card rounded-xl p-6 h-full flex flex-col">
-                            <div class="flex-grow">
-                                <h3 class="font-bold text-xl text-white mb-2 group-hover:text-brand-accent transition-colors">Quran Majeed</h3>
-                                <p class="text-brand-secondary mb-4">Une application Coran complète avec récitations, traductions, tafsir, et de nombreuses autres fonctionnalités pour une étude approfondie.</p>
-                            </div>
-                            <div class="flex items-center justify-between mt-auto pt-4">
-                                <div class="flex flex-wrap gap-2"><span class="tag">Coran</span><span class="tag">Tafsir</span></div>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-brand-secondary group-hover:text-brand-accent transition-colors lucide lucide-arrow-up-right"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
-                            </div>
-                        </div>
-                    </a>
-                    <a href="https://www.thepillarsapp.com/" target="_blank" rel="noopener noreferrer" class="card-link-wrapper group">
-                        <div class="card rounded-xl p-6 h-full flex flex-col">
-                            <div class="flex-grow">
-                                <h3 class="font-bold text-xl text-white mb-2 group-hover:text-brand-accent transition-colors">Pillars: Prayer App</h3>
-                                <p class="text-brand-secondary mb-4">Application de prière minimaliste et respectueuse de la vie privée. Pas de publicités, pas de distractions.</p>
-                            </div>
-                            <div class="flex items-center justify-between mt-auto pt-4">
-                                <div class="flex flex-wrap gap-2"><span class="tag">Prière</span><span class="tag">Open Source</span></div>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-brand-secondary group-hover:text-brand-accent transition-colors lucide lucide-arrow-up-right"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
-                            </div>
-                        </div>
-                    </a>
-                    <a href="https://www.tarteel.ai/" target="_blank" rel="noopener noreferrer" class="card-link-wrapper group">
-                        <div class="card rounded-xl p-6 h-full flex flex-col">
-                            <div class="flex-grow">
-                                <h3 class="font-bold text-xl text-white mb-2 group-hover:text-brand-accent transition-colors">Tarteel AI</h3>
-                                <p class="text-brand-secondary mb-4">Aide à la mémorisation du Coran grâce à l'IA qui écoute et corrige votre récitation en temps réel.</p>
-                            </div>
-                            <div class="flex items-center justify-between mt-auto pt-4">
-                                <div class="flex flex-wrap gap-2"><span class="tag">Coran</span><span class="tag">IA</span></div>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-brand-secondary group-hover:text-brand-accent transition-colors lucide lucide-arrow-up-right"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
-                            </div>
-                        </div>
-                    </a>
-                    <a href="https://play.google.com/store/apps/details?id=com.greentech.hadith" target="_blank" rel="noopener noreferrer" class="card-link-wrapper group">
-                        <div class="card rounded-xl p-6 h-full flex flex-col">
-                            <div class="flex-grow">
-                                <h3 class="font-bold text-xl text-white mb-2 group-hover:text-brand-accent transition-colors">Hadith Collection</h3>
-                                <p class="text-brand-secondary mb-4">Accédez à presque toutes les collections majeures de hadiths (Sahih Bukhari, Muslim, etc.) sur votre appareil.</p>
-                            </div>
-                            <div class="flex items-center justify-between mt-auto pt-4">
-                                <div class="flex flex-wrap gap-2"><span class="tag">Hadith</span><span class="tag">Android</span></div>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-brand-secondary group-hover:text-brand-accent transition-colors lucide lucide-arrow-up-right"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
-                            </div>
-                        </div>
-                    </a>
-                    <a href="https://www.zoya.finance/" target="_blank" rel="noopener noreferrer" class="card-link-wrapper group">
-                        <div class="card rounded-xl p-6 h-full flex flex-col">
-                           <div class="flex-grow">
-                                <h3 class="font-bold text-xl text-white mb-2 group-hover:text-brand-accent transition-colors">Zoya</h3>
-                                <p class="text-brand-secondary mb-4">Analyse la conformité à la charia des actions et des fonds d'investissement pour vous aider à investir halal.</p>
-                            </div>
-                            <div class="flex items-center justify-between mt-auto pt-4">
-                                <div class="flex flex-wrap gap-2"><span class="tag">Finance</span><span class="tag">Investissement</span></div>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-brand-secondary group-hover:text-brand-accent transition-colors lucide lucide-arrow-up-right"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-            </section>
-
-            <!-- Autres sections (Sites Web, Éducation, etc.) avec la même structure de carte cliquable -->
-            <section id="websites" class="animate-fade-in" style="animation-delay: 600ms;">
-                <h2 class="category-title text-3xl font-bold mb-10">Sites Web & Plateformes</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                     <a href="https://sunnah.com/" target="_blank" rel="noopener noreferrer" class="card-link-wrapper group">
-                        <div class="card rounded-xl p-6 h-full flex flex-col">
-                            <div class="flex-grow">
-                                <h3 class="font-bold text-xl text-white mb-2 group-hover:text-brand-accent transition-colors">Sunnah.com</h3>
-                                <p class="text-brand-secondary mb-4">La référence en ligne pour les collections de hadiths du Prophète Muhammad (ﷺ) et leurs traductions.</p>
-                            </div>
-                            <div class="flex items-center justify-between mt-auto pt-4">
-                                <div class="flex flex-wrap gap-2"><span class="tag">Hadith</span><span class="tag">Référence</span></div>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-brand-secondary group-hover:text-brand-accent transition-colors lucide lucide-arrow-up-right"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
-                            </div>
-                        </div>
-                    </a>
-                    <a href="https://yaqeeninstitute.org/" target="_blank" rel="noopener noreferrer" class="card-link-wrapper group">
-                        <div class="card rounded-xl p-6 h-full flex flex-col">
-                            <div class="flex-grow">
-                                <h3 class="font-bold text-xl text-white mb-2 group-hover:text-brand-accent transition-colors">Yaqeen Institute</h3>
-                                <p class="text-brand-secondary mb-4">Recherches académiques et contenus de qualité pour dissiper les doutes et inspirer la conviction (imaan).</p>
-                            </div>
-                            <div class="flex items-center justify-between mt-auto pt-4">
-                                <div class="flex flex-wrap gap-2"><span class="tag">Recherche</span><span class="tag">Dawa</span></div>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-brand-secondary group-hover:text-brand-accent transition-colors lucide lucide-arrow-up-right"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
-                            </div>
-                        </div>
-                    </a>
-                    <a href="https://muslimcentral.com/" target="_blank" rel="noopener noreferrer" class="card-link-wrapper group">
-                        <div class="card rounded-xl p-6 h-full flex flex-col">
-                            <div class="flex-grow">
-                                <h3 class="font-bold text-xl text-white mb-2 group-hover:text-brand-accent transition-colors">Muslim Central</h3>
-                                <p class="text-brand-secondary mb-4">Une immense bibliothèque de conférences audio islamiques de centaines de savants et de conférenciers.</p>
-                            </div>
-                            <div class="flex items-center justify-between mt-auto pt-4">
-                                <div class="flex flex-wrap gap-2"><span class="tag">Audio</span><span class="tag">Conférences</span></div>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-brand-secondary group-hover:text-brand-accent transition-colors lucide lucide-arrow-up-right"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
-                            </div>
-                        </div>
-                    </a>
+            <section id="apps" class="resource-section animate-fade-in" style="animation-delay: 500ms;">
+                <h2 class="category-title text-3xl font-bold mb-10" data-lang="fr:Applications Mobiles|en:Mobile Apps">Applications Mobiles</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 resource-container">
+                    <!-- Cards will be injected here by JavaScript -->
                 </div>
             </section>
             
-            <section id="learning" class="animate-fade-in" style="animation-delay: 700ms;">
-                <h2 class="category-title text-3xl font-bold mb-10">Éducation & Apprentissage</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    <a href="https://bayyinahtv.com/" target="_blank" rel="noopener noreferrer" class="card-link-wrapper group">
-                        <div class="card rounded-xl p-6 h-full flex flex-col">
-                            <div class="flex-grow">
-                                <h3 class="font-bold text-xl text-white mb-2 group-hover:text-brand-accent transition-colors">Bayyinah TV</h3>
-                                <p class="text-brand-secondary mb-4">Plateforme d'apprentissage de l'arabe coranique et d'études approfondies du Coran par Nouman Ali Khan.</p>
-                            </div>
-                            <div class="flex items-center justify-between mt-auto pt-4">
-                                <div class="flex flex-wrap gap-2"><span class="tag">Coran</span><span class="tag">Arabe</span></div>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-brand-secondary group-hover:text-brand-accent transition-colors lucide lucide-arrow-up-right"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
-                            </div>
-                        </div>
-                    </a>
-                    <a href="https://seekersguidance.org/" target="_blank" rel="noopener noreferrer" class="card-link-wrapper group">
-                        <div class="card rounded-xl p-6 h-full flex flex-col">
-                            <div class="flex-grow">
-                                <h3 class="font-bold text-xl text-white mb-2 group-hover:text-brand-accent transition-colors">SeekersGuidance</h3>
-                                <p class="text-brand-secondary mb-4">Cours en ligne gratuits et fiables sur les sciences islamiques, dispensés par des savants qualifiés.</p>
-                            </div>
-                            <div class="flex items-center justify-between mt-auto pt-4">
-                                <div class="flex flex-wrap gap-2"><span class="tag">Cours</span><span class="tag">Savoir</span></div>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-brand-secondary group-hover:text-brand-accent transition-colors lucide lucide-arrow-up-right"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
-                            </div>
-                        </div>
-                    </a>
-                    <a href="https://www.kalamullah.com/" target="_blank" rel="noopener noreferrer" class="card-link-wrapper group">
-                        <div class="card rounded-xl p-6 h-full flex flex-col">
-                            <div class="flex-grow">
-                                <h3 class="font-bold text-xl text-white mb-2 group-hover:text-brand-accent transition-colors">Kalamullah</h3>
-                                <p class="text-brand-secondary mb-4">Une bibliothèque numérique de livres islamiques authentiques disponibles en téléchargement gratuit.</p>
-                            </div>
-                            <div class="flex items-center justify-between mt-auto pt-4">
-                                <div class="flex flex-wrap gap-2"><span class="tag">Livres</span><span class="tag">eBooks</span></div>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-brand-secondary group-hover:text-brand-accent transition-colors lucide lucide-arrow-up-right"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-            </section>
-
-            <section id="youtube" class="animate-fade-in" style="animation-delay: 800ms;">
-                <h2 class="category-title text-3xl font-bold mb-10">Chaînes YouTube</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    <a href="https://www.youtube.com/c/FreeQuranEducation" target="_blank" rel="noopener noreferrer" class="card-link-wrapper group">
-                        <div class="card rounded-xl p-6 h-full flex flex-col">
-                            <div class="flex-grow">
-                                <h3 class="font-bold text-xl text-white mb-2 group-hover:text-brand-accent transition-colors">FreeQuranEducation</h3>
-                                <p class="text-brand-secondary mb-4">Vidéos animées de haute qualité expliquant des histoires du Coran et des concepts islamiques.</p>
-                            </div>
-                            <div class="flex items-center justify-between mt-auto pt-4">
-                                <div class="flex flex-wrap gap-2"><span class="tag">Animation</span><span class="tag">Enfants</span></div>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-brand-secondary group-hover:text-brand-accent transition-colors lucide lucide-arrow-up-right"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
-                            </div>
-                        </div>
-                    </a>
-                     <a href="https://www.youtube.com/c/ThePropheticPath" target="_blank" rel="noopener noreferrer" class="card-link-wrapper group">
-                        <div class="card rounded-xl p-6 h-full flex flex-col">
-                            <div class="flex-grow">
-                                <h3 class="font-bold text-xl text-white mb-2 group-hover:text-brand-accent transition-colors">The Prophetic Path</h3>
-                                <p class="text-brand-secondary mb-4">Série de vidéos sur la vie du Prophète Muhammad (ﷺ) par Sh. Omar Suleiman, avec une excellente production.</p>
-                            </div>
-                            <div class="flex items-center justify-between mt-auto pt-4">
-                                <div class="flex flex-wrap gap-2"><span class="tag">Seerah</span><span class="tag">Histoire</span></div>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-brand-secondary group-hover:text-brand-accent transition-colors lucide lucide-arrow-up-right"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
-                            </div>
-                        </div>
-                    </a>
-                     <a href="https://www.youtube.com/c/BloggingTheology" target="_blank" rel="noopener noreferrer" class="card-link-wrapper group">
-                        <div class="card rounded-xl p-6 h-full flex flex-col">
-                            <div class="flex-grow">
-                                <h3 class="font-bold text-xl text-white mb-2 group-hover:text-brand-accent transition-colors">Blogging Theology</h3>
-                                <p class="text-brand-secondary mb-4">Discussions et interviews académiques sur la théologie islamique, la philosophie et l'apologétique.</p>
-                            </div>
-                            <div class="flex items-center justify-between mt-auto pt-4">
-                                <div class="flex flex-wrap gap-2"><span class="tag">Théologie</span><span class="tag">Académique</span></div>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-brand-secondary group-hover:text-brand-accent transition-colors lucide lucide-arrow-up-right"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
-                            </div>
-                        </div>
-                    </a>
-                </div>
+            <!-- Other Sections -->
+            <section id="websites" class="resource-section animate-fade-in" style="animation-delay: 600ms;">
+                <h2 class="category-title text-3xl font-bold mb-10" data-lang="fr:Sites Web & Plateformes|en:Websites & Platforms">Sites Web & Plateformes</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 resource-container"></div>
             </section>
             
-            <section id="dev" class="animate-fade-in" style="animation-delay: 900ms;">
-                <h2 class="category-title text-3xl font-bold mb-10">Outils pour Développeurs</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    <a href="https://alquran.cloud/api" target="_blank" rel="noopener noreferrer" class="card-link-wrapper group">
-                        <div class="card rounded-xl p-6 h-full flex flex-col">
-                            <div class="flex-grow">
-                                <h3 class="font-bold text-xl text-white mb-2 group-hover:text-brand-accent transition-colors">Al Quran Cloud API</h3>
-                                <p class="text-brand-secondary mb-4">API RESTful pour accéder au texte coranique, traductions, tafsirs et récitations audio.</p>
-                            </div>
-                            <div class="flex items-center justify-between mt-auto pt-4">
-                                <div class="flex flex-wrap gap-2"><span class="tag">API</span><span class="tag">Coran</span></div>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-brand-secondary group-hover:text-brand-accent transition-colors lucide lucide-arrow-up-right"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
-                            </div>
-                        </div>
-                    </a>
-                    <a href="https://aladhan.com/prayer-times-api" target="_blank" rel="noopener noreferrer" class="card-link-wrapper group">
-                        <div class="card rounded-xl p-6 h-full flex flex-col">
-                            <div class="flex-grow">
-                                <h3 class="font-bold text-xl text-white mb-2 group-hover:text-brand-accent transition-colors">PrayerTimes API</h3>
-                                <p class="text-brand-secondary mb-4">API gratuite et facile à utiliser pour obtenir les horaires de prière pour n'importe quel lieu dans le monde.</p>
-                            </div>
-                            <div class="flex items-center justify-between mt-auto pt-4">
-                                <div class="flex flex-wrap gap-2"><span class="tag">API</span><span class="tag">Prière</span></div>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-brand-secondary group-hover:text-brand-accent transition-colors lucide lucide-arrow-up-right"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
-                            </div>
-                        </div>
-                    </a>
-                </div>
+            <section id="learning" class="resource-section animate-fade-in" style="animation-delay: 700ms;">
+                <h2 class="category-title text-3xl font-bold mb-10" data-lang="fr:Éducation & Apprentissage|en:Education & Learning">Éducation & Apprentissage</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 resource-container"></div>
             </section>
+
+            <section id="youtube" class="resource-section animate-fade-in" style="animation-delay: 800ms;">
+                <h2 class="category-title text-3xl font-bold mb-10" data-lang="fr:Chaînes YouTube|en:YouTube Channels">Chaînes YouTube</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 resource-container"></div>
+            </section>
+
+             <!-- NEW (Feature #10): Books section -->
+            <section id="books" class="resource-section animate-fade-in" style="animation-delay: 850ms;">
+                <h2 class="category-title text-3xl font-bold mb-10" data-lang="fr:Livres & Publications|en:Books & Publications">Livres & Publications</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 resource-container"></div>
+            </section>
+
+            <!-- NEW (Feature #11): Podcasts section -->
+            <section id="podcasts" class="resource-section animate-fade-in" style="animation-delay: 870ms;">
+                <h2 class="category-title text-3xl font-bold mb-10" data-lang="fr:Podcasts|en:Podcasts">Podcasts</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 resource-container"></div>
+            </section>
+            
+            <section id="dev" class="resource-section animate-fade-in" style="animation-delay: 900ms;">
+                <h2 class="category-title text-3xl font-bold mb-10" data-lang="fr:Outils pour Développeurs|en:Developer Tools">Outils pour Développeurs</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 resource-container"></div>
+            </section>
+
+            <!-- No results message -->
+            <div id="no-results" class="text-center py-16 hidden">
+                <h3 class="text-2xl font-bold" data-lang="fr:Aucun résultat trouvé|en:No Results Found">Aucun résultat trouvé</h3>
+                <p class="text-brand-secondary dark:text-brand-secondary light:text-light-secondary mt-2" data-lang="fr:Essayez d'ajuster votre recherche ou vos filtres.|en:Try adjusting your search or filters.">Essayez d'ajuster votre recherche ou vos filtres.</p>
+            </div>
 
         </main>
 
         <!-- Pied de page -->
         <footer class="text-center py-12 border-t border-gray-800/50">
             <p class="text-brand-secondary">
-                Conçu avec soin. Contribuez et ajoutez des ressources sur <a href="#" class="text-brand-accent hover:underline">GitHub</a>.
+                <span data-lang="fr:Conçu avec soin. Contribuez sur|en:Crafted with care. Contribute on">Conçu avec soin. Contribuez et ajoutez des ressources sur</span> <a href="https://github.com/technerdsam/awsome-islam-list" target="_blank" rel="noopener noreferrer" class="text-brand-accent hover:underline">GitHub</a>.
             </p>
-            <p class="text-sm text-gray-600 mt-2">© 2025 - Un projet pour la communauté.</p>
+            <p class="text-sm text-gray-600 mt-2">
+                <!-- NEW (Feature #12): Last updated -->
+                <span data-lang="fr:Dernière mise à jour:|en:Last updated:">Dernière mise à jour:</span> <span id="last-updated">17 Octobre 2025</span>.
+                © 2025 - <span data-lang="fr:Un projet pour la communauté.|en:A project for the community.">Un projet pour la communauté.</span>
+                <!-- NEW (Feature #19): RSS Feed link -->
+                <a href="/feed.xml" class="ml-4 text-brand-accent hover:underline">RSS</a>
+            </p>
         </footer>
+    </div>
+    
+    <!-- NEW (Feature #4): Back to top button -->
+    <button id="back-to-top" class="p-3 bg-brand-accent text-brand-dark rounded-full shadow-lg">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6"/></svg>
+    </button>
+
+    <!-- NEW (Feature #13): Suggestion Modal -->
+    <div id="suggest-modal" class="modal-overlay z-50">
+        <div class="modal-content">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-2xl font-bold" data-lang="fr:Suggérer une Ressource|en:Suggest a Resource">Suggérer une Ressource</h3>
+                <button id="close-suggest-modal" class="p-1">&times;</button>
+            </div>
+            <p class="mb-6 text-brand-secondary" data-lang="fr:Votre contribution est précieuse ! Pour suggérer une nouvelle ressource, veuillez ouvrir une 'Issue' sur notre projet GitHub.|en:Your contribution is valuable! To suggest a new resource, please open an 'Issue' on our GitHub project.">Votre contribution est précieuse ! Pour suggérer une nouvelle ressource, veuillez ouvrir une 'Issue' sur notre projet GitHub.</p>
+            <a href="https://github.com/technerdsam/awsome-islam-list/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Suggestion%20de%20Ressource%3A%20" target="_blank" rel="noopener noreferrer" class="w-full text-center bg-brand-accent text-brand-dark font-semibold py-3 px-8 rounded-lg hover:bg-brand-accent-hover transition-transform transform hover:scale-105 inline-block">
+                <span data-lang="fr:Ouvrir une Issue sur GitHub|en:Open GitHub Issue">Ouvrir une Issue sur GitHub</span>
+            </a>
+        </div>
     </div>
     
     <!-- Scripts pour les effets visuels et l'interactivité -->
     <script>
+        // Data for all resources
+        const resources = [
+            // Apps
+            { category: 'apps', title: 'Quran Majeed', link: 'https://www.quranmajeed.com/', tags: ['Coran', 'Tafsir'], desc: { fr: "Une application Coran complète avec récitations, traductions, tafsir, et de nombreuses autres fonctionnalités.", en: "A comprehensive Quran app with recitations, translations, tafsir, and many other features."} },
+            { category: 'apps', title: 'Pillars: Prayer App', link: 'https://www.thepillarsapp.com/', tags: ['Prière', 'Open Source'], desc: { fr: "Application de prière minimaliste et respectueuse de la vie privée. Pas de publicités, pas de distractions.", en: "Minimalist and privacy-focused prayer app. No ads, no distractions."} },
+            { category: 'apps', title: 'Tarteel AI', link: 'https://www.tarteel.ai/', tags: ['Coran', 'IA'], desc: { fr: "Aide à la mémorisation du Coran grâce à l'IA qui écoute et corrige votre récitation en temps réel.", en: "Helps with Quran memorization using AI that listens to and corrects your recitation in real-time."} },
+            { category: 'apps', title: 'Hadith Collection', link: 'https://play.google.com/store/apps/details?id=com.greentech.hadith', tags: ['Hadith', 'Android'], desc: { fr: "Accédez à presque toutes les collections majeures de hadiths (Sahih Bukhari, Muslim, etc.).", en: "Access almost all major hadith collections (Sahih Bukhari, Muslim, etc.) on your device."} },
+            { category: 'apps', title: 'Zoya', link: 'https://www.zoya.finance/', tags: ['Finance', 'Investissement'], desc: { fr: "Analyse la conformité à la charia des actions et des fonds d'investissement pour investir halal.", en: "Analyzes Shariah compliance of stocks and investment funds to help you invest halal."} },
+            // Websites
+            { category: 'websites', title: 'Sunnah.com', link: 'https://sunnah.com/', tags: ['Hadith', 'Référence'], desc: { fr: "La référence en ligne pour les collections de hadiths du Prophète Muhammad (ﷺ) et leurs traductions.", en: "The online reference for hadith collections of Prophet Muhammad (ﷺ) and their translations."} },
+            { category: 'websites', title: 'Yaqeen Institute', link: 'https://yaqeeninstitute.org/', tags: ['Recherche', 'Dawa'], desc: { fr: "Recherches académiques et contenus de qualité pour dissiper les doutes et inspirer la conviction (imaan).", en: "Academic research and quality content to dispel doubts and inspire conviction (imaan)."} },
+            { category: 'websites', title: 'Muslim Central', link: 'https://muslimcentral.com/', tags: ['Audio', 'Conférences'], desc: { fr: "Une immense bibliothèque de conférences audio islamiques de centaines de savants et de conférenciers.", en: "A huge library of Islamic audio lectures from hundreds of scholars and speakers."} },
+            // Learning
+            { category: 'learning', title: 'Bayyinah TV', link: 'https://bayyinahtv.com/', tags: ['Coran', 'Arabe'], desc: { fr: "Plateforme d'apprentissage de l'arabe coranique et d'études du Coran par Nouman Ali Khan.", en: "Platform for learning Quranic Arabic and in-depth Quranic studies by Nouman Ali Khan."} },
+            { category: 'learning', title: 'SeekersGuidance', link: 'https://seekersguidance.org/', tags: ['Cours', 'Savoir'], desc: { fr: "Cours en ligne gratuits et fiables sur les sciences islamiques, dispensés par des savants qualifiés.", en: "Free and reliable online courses on Islamic sciences, taught by qualified scholars."} },
+            { category: 'learning', title: 'Kalamullah', link: 'https://www.kalamullah.com/', tags: ['Livres', 'eBooks'], desc: { fr: "Une bibliothèque numérique de livres islamiques authentiques disponibles en téléchargement gratuit.", en: "A digital library of authentic Islamic books available for free download."} },
+            // YouTube
+            { category: 'youtube', title: 'FreeQuranEducation', link: 'https://www.youtube.com/c/FreeQuranEducation', tags: ['Animation', 'Enfants'], desc: { fr: "Vidéos animées expliquant des histoires du Coran et des concepts islamiques.", en: "High-quality animated videos explaining stories from the Quran and Islamic concepts."} },
+            { category: 'youtube', title: 'The Prophetic Path', link: 'https://www.youtube.com/c/ThePropheticPath', tags: ['Seerah', 'Histoire'], desc: { fr: "Série de vidéos sur la vie du Prophète Muhammad (ﷺ) par Sh. Omar Suleiman.", en: "Video series on the life of Prophet Muhammad (ﷺ) by Sh. Omar Suleiman, with excellent production."} },
+            { category: 'youtube', title: 'Blogging Theology', link: 'https://www.youtube.com/c/BloggingTheology', tags: ['Théologie', 'Académique'], desc: { fr: "Discussions académiques sur la théologie islamique, la philosophie et l'apologétique.", en: "Academic discussions and interviews on Islamic theology, philosophy, and apologetics."} },
+            // Books (NEW)
+            { category: 'books', title: 'The Sealed Nectar', link: '#', tags: ['Seerah', 'Biographie'], desc: { fr: "Une biographie primée et complète du Prophète Muhammad (ﷺ), connue pour son accessibilité.", en: "An award-winning and comprehensive biography of the Prophet Muhammad (ﷺ), known for its accessibility."} },
+            { category: 'books', title: 'Riyad as-Salihin', link: '#', tags: ['Hadith', 'Spiritualité'], desc: { fr: "Les Jardins des Vertueux, une compilation de hadiths sur l'éthique, la morale et la conduite.", en: "The Gardens of the Righteous, a compilation of hadiths on ethics, morals, and conduct."} },
+            // Podcasts (NEW)
+            { category: 'podcasts', title: 'The Ilmfeed Podcast', link: '#', tags: ['Actualités', 'Culture'], desc: { fr: "Discussions sur les actualités, la culture, l'histoire et le style de vie des musulmans.", en: "Discussions on current affairs, culture, history, and lifestyle for Muslims."} },
+            { category: 'podcasts', title: 'Qalam Institute Podcast', link: '#', tags: ['Coran', 'Spiritualité'], desc: { fr: "Conférences et séries approfondies sur le Coran, la spiritualité et les sciences islamiques.", en: "In-depth lectures and series on the Quran, spirituality, and Islamic sciences."} },
+            // Dev
+            { category: 'dev', title: 'Al Quran Cloud API', link: 'https://alquran.cloud/api', tags: ['API', 'Coran'], desc: { fr: "API RESTful pour accéder au texte coranique, traductions, tafsirs et récitations audio.", en: "RESTful API to access Quranic text, translations, tafsirs, and audio recitations."} },
+            { category: 'dev', title: 'PrayerTimes API', link: 'https://aladhan.com/prayer-times-api', tags: ['API', 'Prière'], desc: { fr: "API gratuite pour obtenir les horaires de prière pour n'importe quel lieu dans le monde.", en: "Free API to get prayer times for any location in the world."} },
+        ];
+
         document.addEventListener("DOMContentLoaded", function() {
-            // --- Effet de projecteur pour le curseur ---
-            const spotlight = document.getElementById('cursor-spotlight');
-            if (spotlight) {
-                document.addEventListener('mousemove', (e) => {
-                    spotlight.style.left = `${e.clientX}px`;
-                    spotlight.style.top = `${e.clientY}px`;
+            const resourceGrid = document.getElementById('resource-grid');
+            const searchInput = document.getElementById('search-input');
+            const noResults = document.getElementById('no-results');
+            let currentLang = 'fr'; // Default language
+
+            // --- NEW: Function to update the featured resource every 3 hours ---
+            function updateFeaturedResource() {
+                const featuredLink = document.getElementById('featured-link');
+                const featuredImg = document.getElementById('featured-img');
+                const featuredTitle = document.getElementById('featured-title');
+                const featuredDesc = document.getElementById('featured-desc');
+                const featuredTags = document.getElementById('featured-tags');
+
+                const now = new Date().getTime();
+                const threeHours = 3 * 60 * 60 * 1000;
+                
+                const lastUpdate = localStorage.getItem('featuredLastUpdate');
+                const lastIndex = localStorage.getItem('featuredIndex');
+
+                let newIndex = -1;
+
+                if (!lastUpdate || (now - lastUpdate > threeHours)) {
+                    // Time to update: select a new random resource, different from the last one
+                    let currentIndex = parseInt(lastIndex, 10);
+                    if (isNaN(currentIndex)) currentIndex = -1;
+
+                    do {
+                        newIndex = Math.floor(Math.random() * resources.length);
+                    } while (resources.length > 1 && newIndex === currentIndex);
+                    
+                    localStorage.setItem('featuredIndex', newIndex);
+                    localStorage.setItem('featuredLastUpdate', now);
+                } else {
+                    // Not time yet, use the stored index
+                    newIndex = parseInt(lastIndex, 10);
+                     if (isNaN(newIndex)) newIndex = 0; // Fallback
+                }
+
+                const featuredResource = resources[newIndex];
+                
+                featuredLink.href = featuredResource.link;
+                // Simple placeholder using first two letters of the title
+                const placeholderText = featuredResource.title.substring(0, 2).toUpperCase();
+                featuredImg.src = `https://placehold.co/100x100/171717/eab308?text=${placeholderText}`;
+                featuredImg.alt = `${featuredResource.title} Logo`;
+                featuredTitle.textContent = featuredResource.title;
+                featuredDesc.textContent = featuredResource.desc[currentLang];
+                featuredTags.innerHTML = featuredResource.tags.map(tag => `<span class="tag">${tag}</span>`).join('');
+            }
+
+
+            // Function to generate a card's HTML
+            function createCardHTML(resource) {
+                // NEW (Feature #14 & #15): Social Share & Copy to Clipboard functionality can be added here
+                // NEW (Feature #9): Star rating can be added here
+                return `
+                <a href="${resource.link}" target="_blank" rel="noopener noreferrer" class="card-link-wrapper group" data-title="${resource.title.toLowerCase()}" data-desc="${resource.desc[currentLang].toLowerCase()}" data-tags="${resource.tags.join(',').toLowerCase()}">
+                    <div class="card rounded-xl p-6 h-full flex flex-col">
+                        <div class="flex-grow">
+                            <h3 class="font-bold text-xl mb-2 group-hover:text-brand-accent transition-colors">${resource.title}</h3>
+                            <p class="text-brand-secondary mb-4">${resource.desc[currentLang]}</p>
+                        </div>
+                        <div class="flex items-center justify-between mt-auto pt-4">
+                            <div class="flex flex-wrap gap-2">${resource.tags.map(tag => `<span class="tag" onclick="event.preventDefault(); filterByTag('${tag}')">${tag}</span>`).join('')}</div>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-brand-secondary group-hover:text-brand-accent transition-colors lucide lucide-arrow-up-right"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+                        </div>
+                    </div>
+                </a>`;
+            }
+
+            // Function to render all cards
+            function renderCards() {
+                document.querySelectorAll('.resource-container').forEach(c => c.innerHTML = '');
+                resources.forEach(resource => {
+                    const container = document.getElementById(resource.category)?.querySelector('.resource-container');
+                    if (container) {
+                        container.innerHTML += createCardHTML(resource);
+                    }
+                });
+                addCardEventListeners();
+            }
+
+            // NEW (Feature #1 & #2): Search and filter logic
+            function filterResources() {
+                const searchTerm = searchInput.value.toLowerCase();
+                let visibleCount = 0;
+                
+                document.querySelectorAll('.card-link-wrapper').forEach(card => {
+                    const title = card.dataset.title;
+                    const desc = card.dataset.desc;
+                    const tags = card.dataset.tags;
+                    
+                    if (title.includes(searchTerm) || desc.includes(searchTerm) || tags.includes(searchTerm)) {
+                        card.style.display = 'block';
+                        visibleCount++;
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+
+                document.querySelectorAll('.resource-section').forEach(section => {
+                    const visibleCards = section.querySelectorAll('.card-link-wrapper[style*="display: block"]');
+                    if (visibleCards.length > 0) {
+                        section.style.display = 'block';
+                    } else {
+                        section.style.display = 'none';
+                    }
+                });
+
+                noResults.style.display = visibleCount === 0 ? 'block' : 'none';
+            }
+
+            window.filterByTag = function(tag) {
+                searchInput.value = tag;
+                filterResources();
+                searchInput.focus();
+            }
+
+            searchInput.addEventListener('input', filterResources);
+
+            // --- Card 3D effects ---
+            function addCardEventListeners() {
+                document.querySelectorAll('.card-link-wrapper').forEach(cardWrapper => {
+                    const card = cardWrapper.querySelector('.card');
+                    cardWrapper.addEventListener('mousemove', (e) => {
+                        const rect = cardWrapper.getBoundingClientRect();
+                        const x = e.clientX - rect.left;
+                        const y = e.clientY - rect.top;
+                        const centerX = rect.width / 2;
+                        const centerY = rect.height / 2;
+                        const rotateX = ((y - centerY) / centerY) * -4; // Reduced rotation for subtlety
+                        const rotateY = ((x - centerX) / centerX) * 4;
+                        
+                        card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`;
+                        card.style.setProperty('--x', `${x}px`);
+                        card.style.setProperty('--y', `${y}px`);
+                    });
+                    cardWrapper.addEventListener('mouseleave', () => {
+                        card.style.transform = 'rotateX(0deg) rotateY(0deg) scale(1)';
+                    });
                 });
             }
 
-            // --- Effets 3D et bordure dynamique sur les cartes ---
-            document.querySelectorAll('.card-link-wrapper').forEach(cardWrapper => {
-                const card = cardWrapper.querySelector('.card');
-                cardWrapper.addEventListener('mousemove', (e) => {
-                    const rect = cardWrapper.getBoundingClientRect();
-                    const x = e.clientX - rect.left;
-                    const y = e.clientY - rect.top;
-                    const centerX = rect.width / 2;
-                    const centerY = rect.height / 2;
-                    const rotateX = ((y - centerY) / centerY) * -8; // Degré de rotation
-                    const rotateY = ((x - centerX) / centerX) * 8;
-                    
-                    card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
-                    card.style.setProperty('--x', `${x}px`);
-                    card.style.setProperty('--y', `${y}px`);
-                });
-                cardWrapper.addEventListener('mouseleave', () => {
-                    card.style.transform = 'rotateX(0deg) rotateY(0deg)';
-                });
-            });
-
-            // --- Navigation active au défilement ---
+            // --- Scroll navigation ---
             const sections = document.querySelectorAll('section');
             const navLinks = document.querySelectorAll('.nav-link');
-            const observerOptions = {
-                root: null,
-                rootMargin: "-50% 0px -50% 0px",
-                threshold: 0
-            };
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
@@ -486,23 +509,83 @@
                         });
                     }
                 });
-            }, observerOptions);
+            }, { root: null, rootMargin: "-40% 0px -60% 0px", threshold: 0 });
             sections.forEach(section => observer.observe(section));
             
-            // --- Défilement fluide au clic ---
             navLinks.forEach(anchor => {
                 anchor.addEventListener('click', function (e) {
                     e.preventDefault();
-                    document.querySelector(this.getAttribute('href')).scrollIntoView({
-                        behavior: 'smooth'
-                    });
+                    document.querySelector(this.getAttribute('href')).scrollIntoView({ behavior: 'smooth' });
                 });
             });
+
+            // --- NEW (Feature #4): Back to top button ---
+            const backToTopBtn = document.getElementById('back-to-top');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 300) {
+                    backToTopBtn.style.bottom = '20px';
+                } else {
+                    backToTopBtn.style.bottom = '-50px';
+                }
+            });
+            backToTopBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+            // --- NEW (Feature #5): Language switcher ---
+            window.setLanguage = function(lang) {
+                currentLang = lang;
+                document.querySelectorAll('[data-lang]').forEach(el => {
+                    const translations = el.dataset.lang.split('|').reduce((acc, item) => {
+                        const [key, value] = item.split(':');
+                        acc[key] = value;
+                        return acc;
+                    }, {});
+                    el.textContent = translations[lang] || translations['fr'];
+                });
+                document.querySelectorAll('[data-lang-placeholder]').forEach(el => {
+                    const translations = el.dataset.langPlaceholder.split('|').reduce((acc, item) => {
+                        const [key, value] = item.split(':');
+                        acc[key] = value;
+                        return acc;
+                    }, {});
+                    el.placeholder = translations[lang] || translations['fr'];
+                });
+                document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+                document.querySelector(`.lang-${lang}`).classList.add('active');
+                renderCards(); // Re-render cards with new language
+            };
+
+            // --- NEW (Feature #13): Suggestion Modal ---
+            const suggestModal = document.getElementById('suggest-modal');
+            const openSuggestBtn = document.getElementById('open-suggest-modal');
+            const closeSuggestBtn = document.getElementById('close-suggest-modal');
+            openSuggestBtn.addEventListener('click', () => suggestModal.classList.add('active'));
+            closeSuggestBtn.addEventListener('click', () => suggestModal.classList.remove('active'));
+            suggestModal.addEventListener('click', (e) => {
+                if (e.target === suggestModal) {
+                    suggestModal.classList.remove('active');
+                }
+            });
+            
+            // --- NEW (Feature #18): Service Worker Registration for PWA ---
+            /*
+            if ('serviceWorker' in navigator) {
+                window.addEventListener('load', () => {
+                    navigator.serviceWorker.register('/service-worker.js').then(registration => {
+                        console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                    }, err => {
+                        console.log('ServiceWorker registration failed: ', err);
+                    });
+                });
+            }
+            */
+            // The service-worker.js and manifest.json would need to be created as separate files.
+            
+            // Initial render
+            renderCards();
+            updateFeaturedResource(); // Call the new function on load
+            setLanguage('fr'); // Set default language on load
         });
     </script>
 </body>
 </html>
-
-
-
 
